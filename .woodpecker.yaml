@@ -22,17 +22,3 @@ steps:
       event: push
       branch: main
       status: success
-
-  slack-main-success:
-    image: plugins/slack
-    secrets: [slack_webhook]
-    settings:
-      channel: releases
-      template: >
-        RELEASING *{{ repo.name }} 1.1.{{ build.number }}*
-        (<https://github.com/{{ repo.owner }}/{{ repo.name }}/commit/{{ build.commit }}|GitHub>)
-        (<{{ build.link }}|CI>)
-    when:
-      event: push
-      branch: main
-      status: success
