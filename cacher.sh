@@ -11,7 +11,8 @@ if [[ $CI_COMMIT_MESSAGE == *"[NO CACHE]"* ]]; then
     exit 0
 fi
 
-CACHE_PATH="$CI_REPO_OWNER/$CI_REPO_NAME/$CI_PIPELINE_NUMBER"
+CACHE_PATH="$CI_REPO_OWNER/$CI_REPO_NAME"
+echo "Setting cache path to '/cache/$CACHE_PATH'"
 if [[ -n "$PLUGIN_CACHE_KEY" ]]; then
     function join_by { local IFS="$1"; shift; echo "$*"; }
     IFS=','; read -ra CACHE_PATH_VARS <<< "$PLUGIN_CACHE_KEY"
