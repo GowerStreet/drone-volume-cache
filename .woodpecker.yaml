@@ -1,0 +1,38 @@
+when:
+  branch: master
+
+steps:
+  publish-latest-image:
+    image: thegeeklab/drone-docker-buildx
+    secrets: [docker_username, docker_password]
+    privileged: true
+    settings:
+      username: ${DOCKER_USERNAME}
+      password: ${DOCKER_PASSWORD}
+      repo: gowerstreet/drone-volume-cache
+      build_args:
+        - "TAG=1.1.${CI_PIPELINE_NUMBER}"
+      tags:
+        - latest
+        - "1.1.${CI_PIPELINE_NUMBER}"
+      platforms:
+        - linux/arm64/v8
+        - linux/amd64
+    when:
+      event: push
+      branch: main
+      status: success
+
+  slack-main-success:
+    image: plugins/slack
+    secrets: [slack_webhook]
+    settings:
+      channel: releases
+      template:
+        RELEASING *{{ repo.name }} 1.1.{{ build.number }}*
+        (<https://github.com/{{ repo.owner }}/{{ repo.name }}/commit/{{ build.commit }}|GitHub>)
+        (<{{ build.link }}|CI>)
+    when:
+      event: push
+      branch: main
+      status: success
